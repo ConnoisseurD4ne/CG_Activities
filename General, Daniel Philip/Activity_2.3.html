@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fontsawesome/css/all.min.css">
+    <script type="text/javascript" src="js/jquery-min.js"></script>
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <title>Activity_2.3</title>
+</head>
+<body>
+    <div id="controls">
+        <label for="scale">Scale:</label>
+        <input type="range" id="scale" min="0.1" max="3" step="0.1" value="1">
+        <label for="rotate">Rotate:</label>
+        <input type="range" id="rotate" min="0" max="360" step="1" value="0">
+        <label for="translateX">Translate X:</label>
+        <input type="number" id="translateX" value="200">
+        <label for="translateY">Translate Y:</label>
+        <input type="number" id="translateY" value="200">
+        <button id="translateBtn">Translate</button>
+        <button id="saveBtn">Save</button>
+        <button id="restoreBtn">Restore</button>
+    </div>
+    <div class="canvas-container">
+        <canvas id="scaleCanvas" width="400" height="400"></canvas>
+        <canvas id="rotateCanvas" width="400" height="400"></canvas>
+    </div>
+
+    <script>
+        const scaleCanvas = document.getElementById('scaleCanvas');
+        const rotateCanvas = document.getElementById('rotateCanvas');
+        const scaleCtx = scaleCanvas.getContext('2d');
+        const rotateCtx = rotateCanvas.getContext('2d');
+        const scaleInput = document.getElementById('scale');
+        const rotateInput = document.getElementById('rotate');
+        const translateXInput = document.getElementById('translateX');
+        const translateYInput = document.getElementById('translateY');
+        const translateBtn = document.getElementById('translateBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const restoreBtn = document.getElementById('restoreBtn');
+
+        let scaleSavedState = null;
+        let rotateSavedState = null;
+
+        const drawPacMan = (ctx) => {
+            ctx.fillStyle = 'yellow';
+            ctx.beginPath();
+            ctx.arc(0, 0, 50, 0.2 * Math.PI, 1.8 * Math.PI);
+            ctx.lineTo(0, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(-25, -15, 10, 0, 2 * Math.PI);
+            ctx.fill();
+        };
+
+        const drawScaled = (scale) => {
+            scaleCtx.clearRect(0, 0, scaleCanvas.width, scaleCanvas.height);
+            scaleCtx.save();
+            scaleCtx.translate(scaleCanvas.width / 2, scaleCanvas.height / 2);
+            scaleCtx.scale(scale, scale);
+            drawPacMan(scaleCtx);
+            scaleCtx.restore();
+        };
+
+        const drawRotated = (angle) => {
+            rotateCtx.clearRect(0, 0, rotateCanvas.width, rotateCanvas.height);
+            rotateCtx.save();
+            rotateCtx.translate(rotateCanvas.width / 2, rotateCanvas.height / 2);
+            rotateCtx.rotate(angle * Math.PI / 180);
+            drawPacMan(rotateCtx);
+            rotateCtx.restore();
+        };
+
+        const translateCanvas = (ctx, translateX, translateY) => {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.save();
+            ctx.translate(translateX, translateY);
+            drawPacMan(ctx);
+            ctx.restore();
+        };
+
+        scaleInput.addEventListener('input', () => {
+            const scale = parseFloat(scaleInput.value);
+            drawScaled(scale);
+        });
+
+        rotateInput.addEventListener('input', () => {
+            const angle = parseInt(rotateInput.value, 10);
+            drawRotated(angle);
+        });
+
+        saveBtn.addEventListener('click', () => {
+            scaleSavedState = scaleCtx.getImageData(0, 0, scaleCanvas.width, scaleCanvas.height);
+            rotateSavedState = rotateCtx.getImageData(0, 0, rotateCanvas.width, rotateCanvas.height);
+            alert('Canvas states saved!');
+        });
+
+        restoreBtn.addEventListener('click', () => {
+            if (scaleSavedState && rotateSavedState) {
+                scaleCtx.putImageData(scaleSavedState, 0, 0);
+                rotateCtx.putImageData(rotateSavedState, 0, 0);
+                alert('Canvas states restored!');
+            } else {
+                alert('No saved states to restore!');
+            }
+        });
+
+        translateBtn.addEventListener('click', () => {
+            const translateX = parseInt(translateXInput.value, 10);
+            const translateY = parseInt(translateYInput.value, 10);
+            translateCanvas(scaleCtx, translateX, translateY);
+            translateCanvas(rotateCtx, translateX, translateY);
+        });
+
+        // Initial draw
+        drawScaled(parseFloat(scaleInput.value));
+        drawRotated(parseInt(rotateInput.value, 10));
+    </script>
+</body>
+<script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+</html>

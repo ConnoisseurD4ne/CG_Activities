@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- dpg_initials.html: HTML document to draw DPG initials on canvas -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity_2</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="initialsCanvas" width="400" height="200"></canvas>
+
+    <script>
+        // Initialize canvas context
+        var canvas = document.getElementById('initialsCanvas');
+        var ctx = canvas.getContext('2d');
+
+        // Draw letter D
+        ctx.beginPath();
+        ctx.moveTo(50, 20);
+        ctx.lineTo(50, 100);
+        ctx.quadraticCurveTo(50, 140, 90, 140);
+        ctx.quadraticCurveTo(130, 140, 130, 60);
+        ctx.quadraticCurveTo(130, 20, 90, 20);
+        ctx.closePath();
+        ctx.stroke();
+
+        // Draw letter P
+        ctx.beginPath();
+        ctx.moveTo(160, 20);
+        ctx.lineTo(160, 140);
+        ctx.lineTo(160, 20);
+        ctx.quadraticCurveTo(160, 20, 200, 20);
+        ctx.quadraticCurveTo(240, 20, 240, 60);
+        ctx.quadraticCurveTo(240, 100, 200, 100);
+        ctx.lineTo(160, 100);
+        ctx.stroke();
+
+        // Draw letter G with proper spacing
+        ctx.beginPath();
+        ctx.moveTo(270 + 50, 20); // adding spacing of 50 units
+        ctx.quadraticCurveTo(230 + 50, 20, 230 + 50, 60);
+        ctx.quadraticCurveTo(230 + 50, 100, 270 + 50, 100);
+        ctx.quadraticCurveTo(310 + 50, 100, 310 + 50, 60);
+        ctx.lineTo(270 + 50, 60);
+        ctx.stroke();
+    </script>
+</body>
+</html>
